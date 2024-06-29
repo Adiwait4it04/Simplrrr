@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:airbnb/pages/homepage.dart';
+import 'package:airbnb/pages/otpscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 class Login extends StatefulWidget {
-  Login({super.key});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -137,7 +140,28 @@ class _LoginState extends State<Login> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              _auth.verifyPhoneNumber(
+                                  phoneNumber: _phoneController.text,
+                                  verificationCompleted:
+                                      (PhoneAuthCredential) {},
+                                  verificationFailed: (error) {
+                                    print(error.toString());
+                                  },
+                                  codeSent:
+                                      (verificationId, forceResendingToken) {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => OTPScreen(
+                                          phonenumber:
+                                              _phoneController.toString(),
+                                          verificationId: verificationId,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  codeAutoRetrievalTimeout: (verificationID) {
+                                    print("AutoRetrievalTimeout");
+                                  });
                             },
                             child: const Text('OK'),
                           ),
@@ -226,13 +250,6 @@ class _LoginState extends State<Login> {
                   text: "Sign in with Google",
                   onPressed: () async {
                     await loginwithgoogle(); // if (user != null) {
-                    //   Navigator.pushAndRemoveUntil(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => const Homepage()),
-                    //     (route) => false,
-                    //   );
-                    // }
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
