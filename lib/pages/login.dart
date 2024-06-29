@@ -12,9 +12,21 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+final _auth = FirebaseAuth.instance;
+Future<UserCredential?> loginwithgoogle() async {
+  try {
+    final googleuser = await GoogleSignIn().signIn();
+    final googleAuth = await googleuser?.authentication;
+    final credential = await GoogleAuthProvider.credential(
+        idToken: googleAuth?.idToken, accessToken: googleAuth?.accessToken);
+    return await _auth.signInWithCredential(credential);
+  } catch (e) {
+    print(e.toString());
+  }
+  return null;
+}
+
 class _LoginState extends State<Login> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _user;
   final List<Map<String, String>> _options = [
     {"title": "India (+91)", "value": "+91"},
     {"title": "USA (+1)", "value": "+1"},
@@ -24,19 +36,6 @@ class _LoginState extends State<Login> {
   String? _selectedTitle;
   String? _selectedValue;
   final TextEditingController _phoneController = TextEditingController();
-  void _handleSignin() {
-    try {
-      GoogleAuthProvider _googleAuthprovider = GoogleAuthProvider();
-      _auth.signInWithProvider(_googleAuthprovider);
-    } catch (e) {}
-  }
-
-  void initstate() {
-    super.initState();
-    _auth.authStateChanges().listen((event) {
-      _user = event;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -225,9 +224,8 @@ class _LoginState extends State<Login> {
                 child: SignInButton(
                   Buttons.google,
                   text: "Sign in with Google",
-                  onPressed: () {
-                    _handleSignin();
-                    // if (user != null) {
+                  onPressed: () async {
+                    await loginwithgoogle(); // if (user != null) {
                     //   Navigator.pushAndRemoveUntil(
                     //     context,
                     //     MaterialPageRoute(
