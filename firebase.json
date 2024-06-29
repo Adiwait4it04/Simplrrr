@@ -1,0 +1,39 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "airbnb-clone-dd8d3",
+          "appId": "1:277358869009:android:b3fd6740d00752108d4fb0",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "airbnb-clone-dd8d3",
+          "configurations": {
+            "android": "1:277358869009:android:b3fd6740d00752108d4fb0",
+            "ios": "1:277358869009:ios:b83018b8c10667c48d4fb0",
+            "macos": "1:277358869009:ios:b83018b8c10667c48d4fb0",
+            "web": "1:277358869009:web:26d5a94218a4ba7f8d4fb0",
+            "windows": "1:277358869009:web:6e63a3bf859965ad8d4fb0"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
